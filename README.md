@@ -1,1 +1,1 @@
-# giantbomb-node
+# giantbomb-api (node based)
