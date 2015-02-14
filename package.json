@@ -13,7 +13,7 @@
   "author": "Christian Katzorke <ckatzorke@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ckatzorke/giantbomb-node/issues"
+    "url": "https://github.com/ckatzorke/giantbomb-api/issues"
   },
   "homepage": "https://github.com/ckatzorke/giantbomb-node",
   "dependencies": {

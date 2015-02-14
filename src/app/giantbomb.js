@@ -39,9 +39,10 @@ var gbAPI = function (apikey) {
         var searchReq = new Promise(function (resolve, reject) {
             request(searchOptions, function (error, response, body) {
                 if (!error) {
-                    console.log(response.statusCode);
-                    console.log(response.headers['content-type']);
                     var result = JSON.parse(body);
+                    if(result.error !== 'OK'){
+                        reject(new Error(result.error));
+                    }
                     resolve(result);
                 } else {
                     console.log("Got error: " + error.message);
@@ -51,15 +52,23 @@ var gbAPI = function (apikey) {
         });
         return searchReq;
     };
+    
+    var gameDetail = function(gameId){
+        
+    }
 
     return {
         /**
          * @name search
-         * @param searchString the query to search for, e.g. Battlefield
+         * @param searchString the query to search for, e.g. Battlefield. Wildcards are not required, and will be interpreted as a search term
          * @desc a simple name based fulltext search
+         * @return a Promise for the search, that resolves the JSON object when successful
          */
         'search': function (searchString) {
             return nameSearch(searchString);
+        },
+        'detail': function (gameId) {
+            return gameDetail(gameId);
         }
     };
 };
