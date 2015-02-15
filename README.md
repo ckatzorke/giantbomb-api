@@ -1,13 +1,12 @@
-# giantbomb-api (io.js based)
-
-Project makes use of EcmaScript 6 features, so io.js is required to run the api.
+# giantbomb-api
+Project makes use of EcmaScript 6 features, so io.js or node >0.11 with --harmony is required to run the api.
 
 ## run
 
     npm install
     iojs sample.js
 
-The sample performs a quick search and prints out the number of results.
+The sample performs a quick search for "Day of the Tentacle" and subsequently fetches the details for DOTT.
 
 ## How to set the api key
 

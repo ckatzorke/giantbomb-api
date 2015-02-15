@@ -16,9 +16,6 @@ var gbAPI = function (apikey) {
         qsDefaults = {
             'api_key': gbapikey,
             'format': 'json'
-        },
-        fields = {
-            'field_list': 'name,id,aliases,genres,image,original_release_date,releases,platforms,api_detail_url,site_detail_url'
         };
     //util, get the response check for transport errors, and logical errors (from giantbomb in JSON), if an error occured the promise will be rejected, in case of success the JSON object is returned
     var responseHandler = function (reject, error, response, body) {
@@ -61,9 +58,12 @@ var gbAPI = function (apikey) {
     //show details
     var gameDetail = function (gameId) {
         console.info('Loading details for id: ' + gameId);
-        let detailOptions = _.clone(options);
+        let detailQS = _.extend(_.clone(qsDefaults), {
+                'field_list': 'id,name,aliases,deck,description,image,images,original_release_date,developers,genres,publishers,platforms,site_detail_url,date_last_updated'
+            }),
+            detailOptions = _.clone(options);
         detailOptions.url = options.url + '/game/3030-' + gameId;
-        detailOptions.qs = qsDefaults;
+        detailOptions.qs = detailQS;
         //console.info('detailOptions', detailOptions);
         let detailsReq = new Promise(function (resolve, reject) {
             request(detailOptions, function (error, response, body) {
