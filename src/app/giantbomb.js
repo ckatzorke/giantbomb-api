@@ -23,7 +23,7 @@ var gbAPI = function (apikey) {
     //util, get the response check for transport errors, and logical errors (from giantbomb in JSON), if an error occured the promise will be rejected, in case of success the JSON object is returned
     var responseHandler = function (reject, error, response, body) {
         if (!error) {
-            var result = JSON.parse(body);
+            let result = JSON.parse(body);
             if (result.error !== 'OK') {
                 reject(new Error(result.error));
             }
@@ -37,7 +37,7 @@ var gbAPI = function (apikey) {
     //search for name
     var nameSearch = function (searchString) {
         console.info('searching for', searchString);
-        var searchQS = _.extend(_.clone(qsDefaults), {
+        let searchQS = _.extend(_.clone(qsDefaults), {
                 'filter': 'name:' + searchString,
                 'field_list': 'api_detail_url,id,name,deck,image,original_release_date'
             }),
@@ -48,9 +48,9 @@ var gbAPI = function (apikey) {
 
         //console.info('searchOptions', searchOptions);
 
-        var searchReq = new Promise(function (resolve, reject) {
+        let searchReq = new Promise(function (resolve, reject) {
             request(searchOptions, function (error, response, body) {
-                var result = responseHandler(reject, error, response, body);
+                let result = responseHandler(reject, error, response, body);
                 //only need to resolve since rejects are handled by resonsehandler
                 resolve(result);
             });
@@ -61,13 +61,13 @@ var gbAPI = function (apikey) {
     //show details
     var gameDetail = function (gameId) {
         console.info('Loading details for id: ' + gameId);
-        var detailOptions = _.clone(options);
+        let detailOptions = _.clone(options);
         detailOptions.url = options.url + '/game/3030-' + gameId;
         detailOptions.qs = qsDefaults;
         //console.info('detailOptions', detailOptions);
-        var detailsReq = new Promise(function (resolve, reject) {
+        let detailsReq = new Promise(function (resolve, reject) {
             request(detailOptions, function (error, response, body) {
-                var result = responseHandler(reject, error, response, body);
+                let result = responseHandler(reject, error, response, body);
                 //check if a game has been returned
                 if (result.number_of_total_results !== 1) {
                     reject(new Error('ID ' + gameId + ' seems not to be a valid ID!'));
