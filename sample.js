@@ -2,6 +2,10 @@
 'use strict';
 var apikey = require('./apikey');
 var gb = require('./src/app/giantbomb.js')(apikey);
+var nock = require('nock');
+
+nock.recorder.rec();
+
 gb.search('Day of the Tentacle').then(function (result) {
     var id = result.results[0].id;
     console.log('Found ' + result.number_of_total_results + ' results (should be 1, loading details for 1st entry). Loading details for id=' + id + '...');
@@ -13,3 +17,6 @@ gb.search('Day of the Tentacle').then(function (result) {
 }).catch(function (error) {
     console.error("Error during execution chain: ", error);
 });
+
+var fixtures = nock.recorder.play();
+console.log(fixtures);

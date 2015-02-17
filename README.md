@@ -13,3 +13,7 @@ The sample performs a quick search for "Day of the Tentacle" and subsequently fe
 Giantbomb needs an API key. Since I do not want to check in this information, the sample.js file requires an apikey.js file in the root directory. This file is included in .gitignore, so create one on your own, containing following content
     
     module.exports = '<your_api_key_here';
+
+## tests
+
+Using mmocha and nock for tests, ssee src/test for test cases
