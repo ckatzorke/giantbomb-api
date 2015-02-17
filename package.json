@@ -4,7 +4,7 @@
   "description": "A node.js / io.js based wrapper for the giantbomb (REST) API",
   "main": "src/app/giantbomb.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test --harmony"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,11 @@
     "underscore": "^1.7.0"
   },
   "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-jshint": "^1.9.2",
+    "gulp-mocha": "^2.0.0",
+    "gulp-rimraf": "^0.1.1",
+    "jshint-stylish": "^1.0.0",
     "mocha": "^2.1.0",
     "nock": "^0.59.1"
   }

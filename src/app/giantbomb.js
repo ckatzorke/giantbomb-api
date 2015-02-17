@@ -1,11 +1,11 @@
-/*jslint node: true, nomen: true */
+/*jslint node: true,  nomen: true */
 var request = require('request'),
     _ = require('underscore');
 /**
  * Designed as stateless prototype scoped service, not a protitypable JS instance
  */
 var gbAPI = function (apikey) {
-    "use strict";
+    'use strict';
     var gbapikey = apikey;
 
     //giantbomb http options
@@ -26,7 +26,7 @@ var gbAPI = function (apikey) {
             }
             return result;
         } else {
-            console.error("Got error: " + error.message);
+            console.error('Got error: ' + error.message);
             reject(error); //TODO
         }
     };
