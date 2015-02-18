@@ -3,7 +3,7 @@ var gulp = require('gulp'),
     rimraf = require('gulp-rimraf'),
     jshint = require('gulp-jshint'),
     stylish = require('jshint-stylish'),
-    mocha = require('gulp-mocha');;
+    mocha = require('gulp-mocha');
 
 /*
  * clean
