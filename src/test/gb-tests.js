@@ -1,10 +1,10 @@
 /*jslint node: true,  nomen: true */
 /*global describe, it*/
 
-//create fixture file for mocking http calls
 'use strict';
 var nock = require('nock');
 var apikey = 'test_key';
+var should = require('should');
 var gb = require('../app/giantbomb.js')(apikey);
 
 //has been simplified for better readability
@@ -133,24 +133,31 @@ nock('http://www.giantbomb.com')
     });
 
 
-
+describe('Beispiel', function () {
+    it('1+1 macht 2 immer und überall', function (done) {
+        var i = 1+1;
+        ('3').should.be.equal('3').and.be.a.String;
+        done();
+    });
+});
 describe('Search for games', function () {
     describe('Search for DOTT', function () {
-        it('should return 1 element', function () {
+        it('should return 1 element', function (done) {
             gb.search('Day of the Tentacle').then(function (result) {
-                result.error.should.equal('OK');
-                result.results.length.should.equal(1);
-                result.number_of_page_results.should.equal(1);
-                result.results[0].id.should.equal(4372);
+                result.error.should.be.equal('OK');
+                result.results.length.should.be.exactly(1);
+                result.number_of_page_results.should.be.exactly(1);
+                result.results[0].id.should.be.exactly(4372);
+                done();
             });
         });
     });
     describe('Search with stupid string', function () {
         it('should return no element', function () {
             gb.search('lömleplöm').then(function (result) {
-                result.error.should.equal('OK');
-                result.results.length.should.equal(0);
-                result.number_of_page_results.should.equal(0);
+                result.error.should.be.equal('OK');
+                result.results.length.should.be.exactly(0);
+                result.number_of_page_results.should.be.exactly(0);
             });
         });
     });
