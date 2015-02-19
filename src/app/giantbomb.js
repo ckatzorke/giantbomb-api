@@ -45,7 +45,7 @@ var gbAPI = function (apikey) {
 
         //console.info('searchOptions', searchOptions);
 
-        let searchReq = new Promise(function (resolve, reject) {
+        let searchReq = new Promise((resolve, reject) => {
             request(searchOptions, function (error, response, body) {
                 let result = responseHandler(reject, error, response, body);
                 //only need to resolve since rejects are handled by resonsehandler
@@ -65,7 +65,7 @@ var gbAPI = function (apikey) {
         detailOptions.url = options.url + '/game/3030-' + gameId;
         detailOptions.qs = detailQS;
         //console.info('detailOptions', detailOptions);
-        let detailsReq = new Promise(function (resolve, reject) {
+        let detailsReq = new Promise((resolve, reject) => {
             request(detailOptions, function (error, response, body) {
                 let result = responseHandler(reject, error, response, body);
                 //check if a game has been returned
