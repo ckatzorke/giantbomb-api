@@ -26,7 +26,7 @@ var gbAPI = function (apikey) {
             }
             return result;
         } else {
-            console.error('Got error: ' + error.message);
+            console.error(`Got error: ${error.message}`);
             reject(error); //TODO
         }
     };
@@ -35,17 +35,17 @@ var gbAPI = function (apikey) {
     var nameSearch = function (searchString) {
         console.info('searching for', searchString);
         let searchQS = _.extend(_.clone(qsDefaults), {
-                'filter': 'name:' + searchString,
+                'filter': `name:${searchString}`,
                 'field_list': 'api_detail_url,id,name,deck,image,original_release_date'
             }),
             searchOptions = _.clone(options);
 
-        searchOptions.url = options.url + '/games';
+        searchOptions.url = `${options.url}/games`;
         searchOptions.qs = searchQS;
 
         //console.info('searchOptions', searchOptions);
 
-        let searchReq = new Promise((resolve, reject) => {
+        let searchReq = new Promise(function (resolve, reject) {
             request(searchOptions, function (error, response, body) {
                 let result = responseHandler(reject, error, response, body);
                 //only need to resolve since rejects are handled by resonsehandler
@@ -57,20 +57,20 @@ var gbAPI = function (apikey) {
 
     //show details
     var gameDetail = function (gameId) {
-        console.info('Loading details for id: ' + gameId);
+        console.info(`Loading details for id ${gameId}`);
         let detailQS = _.extend(_.clone(qsDefaults), {
                 'field_list': 'id,name,aliases,deck,description,image,images,original_release_date,developers,genres,publishers,platforms,site_detail_url,date_last_updated'
             }),
             detailOptions = _.clone(options);
-        detailOptions.url = options.url + '/game/3030-' + gameId;
+        detailOptions.url = `${options.url}/game/3030-${gameId}`;
         detailOptions.qs = detailQS;
         //console.info('detailOptions', detailOptions);
-        let detailsReq = new Promise((resolve, reject) => {
+        let detailsReq = new Promise(function (resolve, reject) {
             request(detailOptions, function (error, response, body) {
                 let result = responseHandler(reject, error, response, body);
                 //check if a game has been returned
                 if (result.number_of_total_results !== 1) {
-                    reject(new Error('ID ' + gameId + ' seems not to be a valid ID!'));
+                    reject(new Error(`ID ${gameId} seems not to be a valid ID!`));
                 }
                 resolve(result.results);
             });
