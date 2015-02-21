@@ -1,5 +1,5 @@
 # giantbomb-api
-Project makes use of EcmaScript 6 features, so io.js or node >0.11 with --harmony is required to run the api.
+Project makes use of EcmaScript 6 features, so io.js is required to run the api (node --harmony will work when node supports template strings).
 
 ## run
 
