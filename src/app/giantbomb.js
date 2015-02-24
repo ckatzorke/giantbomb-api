@@ -1,6 +1,13 @@
 /*jslint node: true,  nomen: true */
 var request = require('request'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    log4js = require('log4js');
+
+/**
+ * Ze logger
+ */
+var logger = log4js.getLogger();
+
 
 /**
  * push array elements into an arry
@@ -33,14 +40,14 @@ var gbAPI = function (apikey) {
             }
             return result;
         } else {
-            console.error(`Got error: ${error.message}`);
+            logger.fatal(`Got error: ${error.message}`, error);
             reject(error); //TODO
         }
     };
 
     //quicksearch for name
     var nameSearch = function (searchString) {
-        console.info('searching for', searchString);
+        logger.ddebug('searching for', searchString);
         let searchQS = _.extend(_.clone(queryStringDefault), {
                 'filter': `name:${searchString}`,
                 'field_list': 'api_detail_url,id,name,deck,image,original_release_date'
@@ -59,7 +66,7 @@ var gbAPI = function (apikey) {
 
     //show details
     var gameDetail = function (gameId) {
-        console.info(`Loading details for id ${gameId}`);
+        logger.debug(`Loading details for id ${gameId}`);
         let detailQS = _.extend(_.clone(queryStringDefault), {
                 'field_list': 'id,name,aliases,deck,description,image,images,original_release_date,developers,genres,publishers,platforms,site_detail_url,date_last_updated'
             }),
@@ -102,7 +109,7 @@ var gbAPI = function (apikey) {
 
         gamesHttpOptions.url = `${httpDefaultOptions.url}/games`;
         gamesHttpOptions.qs = gamesQS;
-        console.info('gamesHttpOptions', JSON.stringify(gamesHttpOptions, null, 2));
+        logger.debug('gamesHttpOptions', JSON.stringify(gamesHttpOptions, null, 2));
 
         let gamesReq = new Promise(function (resolve, reject) {
             request(gamesHttpOptions, function (error, response, body) {
@@ -110,18 +117,18 @@ var gbAPI = function (apikey) {
                 var pagedResultsCount = result.number_of_page_results;
                 var totalresultsCount = result.number_of_total_results;
                 var pages = Math.ceil(totalresultsCount / result.limit);
-                console.info(`Number of total results: ${totalresultsCount}, number of pages ${pages}`);
+                logger.debug(`Number of total results: ${totalresultsCount}, number of pages ${pages}`);
 
                 //make potentially additional requests, if  pages > 1
                 var subRequests = [];
                 for (let i = 1; i < pages; i++) {
                     let offset = result.limit * (i);
                     gamesHttpOptions.qs.offset = offset;
-                    console.info(`Getting next page ${i+1}/${pages}... gamesHttpOptions`, JSON.stringify(gamesHttpOptions, null, 2));
+                    logger.debug(`Getting next page ${i+1}/${pages}... gamesHttpOptions`, JSON.stringify(gamesHttpOptions, null, 2));
                     subRequests.push(new Promise(function (resolve, reject) {
                         request(gamesHttpOptions, function (error, response, body) {
                             let nextResult = responseHandler(reject, error, response, body);
-                            console.info('Resolving ' + nextResult.results.length + ' entries');
+                            logger.debug('Resolving ' + nextResult.results.length + ' entries');
                             result.results.pushArray(nextResult.results);
                             //resolve the array
                             resolve();
@@ -129,8 +136,8 @@ var gbAPI = function (apikey) {
                     }));
                 }
                 Promise.all(subRequests).then(function () {
-                    console.info('All done.');
-                    console.info('Done. Got a total of ' + result.results.length + ' entries');
+                    logger.debug('All done.');
+                    logger.debug('Done. Got a total of ' + result.results.length + ' entries');
                     //only need to resolve since rejects are handled by resonsehandler
                     resolve(result.results);
                 });
