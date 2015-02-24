@@ -12,7 +12,7 @@ var logger = log4js.getLogger();
 /**
  * push array elements into an arry
  */
-Array.prototype.pushArray = function() {
+Array.prototype.pushArray = function () {
     this.push.apply(this, this.concat.apply([], arguments));
 };
 /**
@@ -47,16 +47,6 @@ var gbAPI = function (apikey) {
 
     //quicksearch for name
     var nameSearch = function (searchString) {
-        logger.ddebug('searching for', searchString);
-        let searchQS = _.extend(_.clone(queryStringDefault), {
-                'filter': `name:${searchString}`,
-                'field_list': 'api_detail_url,id,name,deck,image,original_release_date'
-            }),
-            searchOptions = _.clone(httpDefaultOptions);
-
-        searchOptions.url = `${httpDefaultOptions.url}/games`;
-        searchOptions.qs = searchQS;
-
         return games({
             'filter': {
                 'name': searchString
@@ -87,18 +77,21 @@ var gbAPI = function (apikey) {
         return detailsReq;
     };
 
-    var games = function (options) {
+    var games = function (opt) {
         //TODO when options undefined
+        var options = opt || {};
         var filterString = '';
-        var firstFilter = true;
-        for (let property in options.filter) {
-            if (options.filter.hasOwnProperty(property)) {
-                if (firstFilter) {
-                    firstFilter = false;
-                } else {
-                    filterString += '|';
+        if (options.filter) {
+            var firstFilter = true;
+            for (let property in options.filter) {
+                if (options.filter.hasOwnProperty(property)) {
+                    if (firstFilter) {
+                        firstFilter = false;
+                    } else {
+                        filterString += '|';
+                    }
+                    filterString += property + ':' + options.filter[property];
                 }
-                filterString += property + ':' + options.filter[property];
             }
         }
         var gamesQS = _.extend(_.clone(queryStringDefault), {
