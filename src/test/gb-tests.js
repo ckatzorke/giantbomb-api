@@ -143,7 +143,7 @@ describe('Beispiel', function () {
 describe('Search for games', function () {
     describe('Search for DOTT', function () {
         it('should return 1 element', function (done) {
-            gb.search('Day of the Tentacle').then(function (result) {
+            gb.quicksearch('Day of the Tentacle').then(function (result) {
                 result.error.should.be.equal('OK');
                 result.results.length.should.be.exactly(1);
                 result.number_of_page_results.should.be.exactly(1);
@@ -154,7 +154,7 @@ describe('Search for games', function () {
     });
     describe('Search with stupid string', function () {
         it('should return no element', function () {
-            gb.search('lömleplöm').then(function (result) {
+            gb.quicksearch('lömleplöm').then(function (result) {
                 result.error.should.be.equal('OK');
                 result.results.length.should.be.exactly(0);
                 result.number_of_page_results.should.be.exactly(0);

@@ -1,6 +1,13 @@
 /*jslint node: true,  nomen: true */
 var request = require('request'),
     _ = require('underscore');
+
+/**
+ * push array elements into an arry
+ */
+Array.prototype.pushArray = function() {
+    this.push.apply(this, this.concat.apply([], arguments));
+};
 /**
  * Designed as stateless prototype scoped service, not a protitypable JS instance
  */
@@ -9,11 +16,11 @@ var gbAPI = function (apikey) {
     var gbapikey = apikey;
 
     //giantbomb http options
-    var options = {
+    var httpDefaultOptions = {
             url: 'http://www.giantbomb.com/api',
             method: 'GET'
         },
-        qsDefaults = {
+        queryStringDefault = {
             'api_key': gbapikey,
             'format': 'json'
         };
@@ -31,38 +38,33 @@ var gbAPI = function (apikey) {
         }
     };
 
-    //search for name
+    //quicksearch for name
     var nameSearch = function (searchString) {
         console.info('searching for', searchString);
-        let searchQS = _.extend(_.clone(qsDefaults), {
+        let searchQS = _.extend(_.clone(queryStringDefault), {
                 'filter': `name:${searchString}`,
                 'field_list': 'api_detail_url,id,name,deck,image,original_release_date'
             }),
-            searchOptions = _.clone(options);
+            searchOptions = _.clone(httpDefaultOptions);
 
-        searchOptions.url = `${options.url}/games`;
+        searchOptions.url = `${httpDefaultOptions.url}/games`;
         searchOptions.qs = searchQS;
 
-        //console.info('searchOptions', searchOptions);
-
-        let searchReq = new Promise(function (resolve, reject) {
-            request(searchOptions, function (error, response, body) {
-                let result = responseHandler(reject, error, response, body);
-                //only need to resolve since rejects are handled by resonsehandler
-                resolve(result);
-            });
+        return games({
+            'filter': {
+                'name': searchString
+            }
         });
-        return searchReq;
     };
 
     //show details
     var gameDetail = function (gameId) {
         console.info(`Loading details for id ${gameId}`);
-        let detailQS = _.extend(_.clone(qsDefaults), {
+        let detailQS = _.extend(_.clone(queryStringDefault), {
                 'field_list': 'id,name,aliases,deck,description,image,images,original_release_date,developers,genres,publishers,platforms,site_detail_url,date_last_updated'
             }),
-            detailOptions = _.clone(options);
-        detailOptions.url = `${options.url}/game/3030-${gameId}`;
+            detailOptions = _.clone(httpDefaultOptions);
+        detailOptions.url = `${httpDefaultOptions.url}/game/3030-${gameId}`;
         detailOptions.qs = detailQS;
         //console.info('detailOptions', detailOptions);
         let detailsReq = new Promise(function (resolve, reject) {
@@ -78,17 +80,85 @@ var gbAPI = function (apikey) {
         return detailsReq;
     };
 
+    var games = function (options) {
+        //TODO when options undefined
+        var filterString = '';
+        var firstFilter = true;
+        for (let property in options.filter) {
+            if (options.filter.hasOwnProperty(property)) {
+                if (firstFilter) {
+                    firstFilter = false;
+                } else {
+                    filterString += '|';
+                }
+                filterString += property + ':' + options.filter[property];
+            }
+        }
+        var gamesQS = _.extend(_.clone(queryStringDefault), {
+                'filter': filterString,
+                'field_list': 'id,name,aliases,deck,description,image,images,original_release_date,developers,genres,publishers,platforms,site_detail_url,date_last_updated'
+            }),
+            gamesHttpOptions = _.clone(httpDefaultOptions);
+
+        gamesHttpOptions.url = `${httpDefaultOptions.url}/games`;
+        gamesHttpOptions.qs = gamesQS;
+        console.info('gamesHttpOptions', JSON.stringify(gamesHttpOptions, null, 2));
+
+        let gamesReq = new Promise(function (resolve, reject) {
+            request(gamesHttpOptions, function (error, response, body) {
+                var result = responseHandler(reject, error, response, body);
+                var pagedResultsCount = result.number_of_page_results;
+                var totalresultsCount = result.number_of_total_results;
+                var pages = Math.ceil(totalresultsCount / result.limit);
+                console.info(`Number of total results: ${totalresultsCount}, number of pages ${pages}`);
+
+                //make potentially additional requests, if  pages > 1
+                var subRequests = [];
+                for (let i = 1; i < pages; i++) {
+                    let offset = result.limit * (i);
+                    gamesHttpOptions.qs.offset = offset;
+                    console.info(`Getting next page ${i+1}/${pages}... gamesHttpOptions`, JSON.stringify(gamesHttpOptions, null, 2));
+                    subRequests.push(new Promise(function (resolve, reject) {
+                        request(gamesHttpOptions, function (error, response, body) {
+                            let nextResult = responseHandler(reject, error, response, body);
+                            console.info('Resolving ' + nextResult.results.length + ' entries');
+                            result.results.pushArray(nextResult.results);
+                            //resolve the array
+                            resolve();
+                        });
+                    }));
+                }
+                Promise.all(subRequests).then(function () {
+                    console.info('All done.');
+                    console.info('Done. Got a total of ' + result.results.length + ' entries');
+                    //only need to resolve since rejects are handled by resonsehandler
+                    resolve(result.results);
+                });
+
+            });
+        });
+        return gamesReq;
+    };
 
 
     return {
         /**
-         * @name search
-         * @desc a simple name based fulltext search
-         * @param searchString the query to search for, e.g. Battlefield. Wildcards are not required, and will be interpreted as a search term
+         * @name quicksearch
+         * @desc a simple name based 'fulltext' search (not really)
+         * @param searchString the query to search for, e.g. 'Battlefield'. Wildcards are not required, and will be interpreted as a search term
+         * @return a Promise for the search, that resolves the an array of games objects when successful
+         */
+        'quicksearch': function (searchString) {
+            return nameSearch(searchString);
+        },
+        /**
+         * @name games
+         * @desc an abstraction of the games resource
+         * @param options
          * @return a Promise for the search, that resolves the JSON object when successful.  The JSON is currently as-is, i.e. as returned from GiantBomb
          */
-        'search': function (searchString) {
-            return nameSearch(searchString);
+        'games': function (options) {
+            return games(options);
         },
         /**
          * @name detail
