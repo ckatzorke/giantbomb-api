@@ -7,13 +7,12 @@ var gb = require('./src/app/giantbomb.js')(apikey);
 
 gb.quicksearch('Day of the Tentacle').then(function (result) {
     var id = result[0].id;
-    console.log(`Found ${result.length} results (should be 1, loading details for 1st entry). Loading details for id=${id}`);
+    console.log('Found ' + result.length + ' results (should be 1, loading details for 1st entry). Loading details for id=' + id);
     return gb.detail(id);
 }).then(function (detail) {
-    console.info(`Details for ${detail.name}`);
+    console.info('Details for ' + detail.name);
     console.info('=============================');
     console.info(detail.deck);
 }).catch(function (error) {
     console.error("Error during execution chain: ", error, error.stack);
 });
-

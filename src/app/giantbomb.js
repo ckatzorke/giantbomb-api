@@ -40,7 +40,7 @@ var gbAPI = function (apikey) {
             }
             return result;
         } else {
-            logger.fatal(`Got error: ${error.message}`, error);
+            logger.fatal('Got error: ' + error.message, error);
             reject(error); //TODO
         }
     };
@@ -56,12 +56,12 @@ var gbAPI = function (apikey) {
 
     //show details
     var gameDetail = function (gameId) {
-        logger.debug(`Loading details for id ${gameId}`);
+        logger.debug('Loading details for id ' + gameId);
         let detailQS = _.extend(_.clone(queryStringDefault), {
                 'field_list': 'id,name,aliases,deck,description,image,images,original_release_date,developers,genres,publishers,platforms,site_detail_url,date_last_updated'
             }),
             detailOptions = _.clone(httpDefaultOptions);
-        detailOptions.url = `${httpDefaultOptions.url}/game/3030-${gameId}`;
+        detailOptions.url = httpDefaultOptions.url + '/game/3030-' + gameId;
         detailOptions.qs = detailQS;
         //console.info('detailOptions', detailOptions);
         let detailsReq = new Promise(function (resolve, reject) {
@@ -69,7 +69,7 @@ var gbAPI = function (apikey) {
                 let result = responseHandler(reject, error, response, body);
                 //check if a game has been returned
                 if (result.number_of_total_results !== 1) {
-                    reject(new Error(`ID ${gameId} seems not to be a valid ID!`));
+                    reject(new Error('ID ' + gameId + ' seems not to be a valid ID!'));
                 }
                 resolve(result.results);
             });
@@ -100,7 +100,7 @@ var gbAPI = function (apikey) {
             }),
             gamesHttpOptions = _.clone(httpDefaultOptions);
 
-        gamesHttpOptions.url = `${httpDefaultOptions.url}/games`;
+        gamesHttpOptions.url = httpDefaultOptions.url + '/games';
         gamesHttpOptions.qs = gamesQS;
         logger.debug('gamesHttpOptions', JSON.stringify(gamesHttpOptions, null, 2));
 
@@ -110,14 +110,14 @@ var gbAPI = function (apikey) {
                 var pagedResultsCount = result.number_of_page_results;
                 var totalresultsCount = result.number_of_total_results;
                 var pages = Math.ceil(totalresultsCount / result.limit);
-                logger.debug(`Number of total results: ${totalresultsCount}, number of pages ${pages}`);
+                logger.debug('Number of total results: ' + totalresultsCount + ', number of pages pages');
 
                 //make potentially additional requests, if  pages > 1
                 var subRequests = [];
                 for (let i = 1; i < pages; i++) {
                     let offset = result.limit * (i);
                     gamesHttpOptions.qs.offset = offset;
-                    logger.debug(`Getting next page ${i+1}/${pages}... gamesHttpOptions`, JSON.stringify(gamesHttpOptions, null, 2));
+                    logger.debug('Getting next page ' + (i + 1) + '/' + pages + '... gamesHttpOptions:', JSON.stringify(gamesHttpOptions, null, 2));
                     subRequests.push(new Promise(function (resolve, reject) {
                         request(gamesHttpOptions, function (error, response, body) {
                             let nextResult = responseHandler(reject, error, response, body);
