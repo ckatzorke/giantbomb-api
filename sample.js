@@ -14,5 +14,5 @@ gb.quicksearch('Day of the Tentacle').then(function (result) {
     console.info('=============================');
     console.info(detail.deck);
 }).catch(function (error) {
-    console.error("Error during execution chain: ", error, error.stack);
+    console.error('Error during execution chain: ', error, error.stack);
 });

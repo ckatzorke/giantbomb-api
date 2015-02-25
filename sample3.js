@@ -22,5 +22,5 @@ gb.games({
     console.log('found ' + result.length + ' games for ps4');
 }).
 catch(function (error) {
-    console.error("Error during execution chain: ", error, error.stack);
+    console.error('Error during execution chain: ', error, error.stack);
 });
