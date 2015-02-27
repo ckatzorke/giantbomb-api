@@ -5,21 +5,25 @@
 var apikey = require('./apikey');
 var gb = require('./src/app/giantbomb.js')(apikey);
 
+
 console.log('Getting all games for virtual boy...');
 gb.games({
     filter: {
         platforms: 79
     }
 }).then(function (result) {
-    console.log('found ' + result.length + ' games for VirtualBoy');
+    console.log('found ' + result.results.length + ' games for VirtualBoy');
     console.log('Getting all games for PS4...');
     return gb.games({
         filter: {
             platforms: 146
-        }
+        },
+        limit: 1,
+        offset: 0,
+        paging: true
     });
 }).then(function (result) {
-    console.log('found ' + result.length + ' games for ps4');
+    console.log('found ' + result.totalResults + ' games for ps4');
 }).
 catch(function (error) {
     console.error('Error during execution chain: ', error, error.stack);
