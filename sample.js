@@ -8,7 +8,7 @@ var gb = require('./src/app/giantbomb.js')(apikey);
 console.log('Defaults=', gb.defaults);
 gb.quicksearch('Day of the Tentacle').then(function (result) {
     var id = result.results[0].id;
-    console.log('Found ' + result.length + ' results (should be 1, loading details for 1st entry). Loading details for id=' + id);
+    console.log('Found ' + result.results.length + ' results (should be 1, loading details for 1st entry). Loading details for id=' + id);
     return gb.detail(id);
 }).then(function (detail) {
     console.info('Details for ' + detail.name);

@@ -52,11 +52,23 @@ var gbAPI = function (apikey) {
 
     //quicksearch for name
     var nameSearch = function (searchString) {
-        return games({
-            'filter': {
-                'name': searchString
-            }
+        logger.debug('Searching for ' + searchString);
+        var searchOptions = _.clone(httpDefaultOptions);
+        searchOptions.url = httpDefaultOptions.url + '/search';
+        searchOptions.qs.query = searchString;
+        searchOptions.qs.resources = 'game';
+
+        logger.debug('searchOptions', JSON.stringify(searchOptions, null, 2));
+        let detailsReq = new Promise(function (resolve, reject) {
+            request(searchOptions, function (error, response, body) {
+                let result = responseHandler(reject, error, response, body);
+                let ret = {};
+                ret.totalResults = result.number_of_total_results;
+                ret.results = result.results;
+                resolve(ret);
+            });
         });
+        return detailsReq;
     };
 
     //show details

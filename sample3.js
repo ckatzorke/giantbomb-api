@@ -13,7 +13,7 @@ gb.games({
     }
 }).then(function (result) {
     console.log('found ' + result.results.length + ' games for VirtualBoy');
-    console.log('Getting all games for PS4...');
+    console.log('Getting all games for Playstation...');
     return gb.games({
         filter: {
             platforms: 146
