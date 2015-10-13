@@ -164,7 +164,7 @@ var gbAPI = function (apikey) {
          * @name quicksearch
          * @desc a simple name based 'fulltext' search (not really)
          * @param searchString the query to search for, e.g. 'Battlefield'. Wildcards are not required, and will be interpreted as a search term
-         * @return a Promise for the search, that resolves the an array of games objects when successful
+         * @return a Promise for the search, that resolves an array of games objects when successful
          */
         'quicksearch': function (searchString) {
             return nameSearch(searchString);
