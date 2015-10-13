@@ -2,8 +2,8 @@
 //quicksearch with a searchstring that won't find anything
 
 'use strict';
-var apikey = require('./apikey');
-var gb = require('./src/app/giantbomb.js')(apikey);
+var apikey = require('../apikey');
+var gb = require('../giantbomb.js')(apikey);
 
 gb.quicksearch('Nixzufinden').then(function (result) {
     console.log('Found ' + result.totalResults + ' results (should be 0)');

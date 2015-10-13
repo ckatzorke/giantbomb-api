@@ -2,8 +2,8 @@
 //games abstraction example. Search for all games of virtualboy (id=79), ps4 id=146
 
 'use strict';
-var apikey = require('./apikey');
-var gb = require('./src/app/giantbomb.js')(apikey);
+var apikey = require('../apikey');
+var gb = require('../giantbomb.js')(apikey);
 
 
 console.log('Getting all games for virtual boy...');

@@ -2,8 +2,8 @@
 //quicksearch for a single game
 
 'use strict';
-var apikey = require('./apikey');
-var gb = require('./src/app/giantbomb.js')(apikey);
+var apikey = require('../apikey');
+var gb = require('../giantbomb.js')(apikey);
 
 console.log('Defaults=', gb.defaults);
 gb.quicksearch('Day of the Tentacle').then(function (result) {

@@ -1,0 +1,13 @@
+{
+  "env": {
+    "browser": false,
+    "node": true
+  },
+  "ecmaFeatures": {
+    "blockBindings": true,
+    "forOf": true,
+    "generators": true,
+    "arrowFunctions": true,
+    "templateStrings": true
+  }
+}
