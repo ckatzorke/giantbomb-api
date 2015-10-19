@@ -53,6 +53,8 @@ app.use(route.get('/gb/detail/:id', gbhandler.detail));
 if (!module.parent) {
     app.listen(port);
 }
+
+console.log('\033[2J');
 console.log(`collect.io-koa is running on http://${host}:${port}/`);
 console.log('following endpoints are bound');
 console.log(' /gb/search?q={query}');
