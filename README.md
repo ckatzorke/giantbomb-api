@@ -14,9 +14,9 @@ Giantbomb needs an API key. Since I do not want to check in this information, th
 
 The sample performs a quick search for "Day of the Tentacle" and subsequently fetches the details for DOTT.
 
-## run koa middleware for embedded restservice
+## run koa middleware for embedded rest service
 
-    node src/app/server.js
+    npm server
 
 Watch the output, the server is created, bound to _localhost:3000_ with the endpoints
 

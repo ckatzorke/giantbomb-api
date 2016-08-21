@@ -26,6 +26,9 @@ var gbAPI = function (apikey) {
     //giantbomb http options
     var httpDefaultOptions = {
         url: 'http://www.giantbomb.com/api',
+		headers: {
+			  'User-Agent': 'giantbomb-node; node search client by Christian Katzorke'
+		},
         method: 'GET',
         qs: {
             'api_key': gbapikey,
@@ -34,7 +37,7 @@ var gbAPI = function (apikey) {
             'sort': '',
             'field_list': 'id,name,aliases,deck,image,images,original_release_date,developers,genres,publishers,platforms,site_detail_url,date_last_updated', //description,
             'format': 'json'
-        }
+        },
     };
     //util, get the response check for transport errors, and logical errors (from giantbomb in JSON), if an error occured the promise will be rejected, in case of success the JSON object is returned
     var responseHandler = function (reject, error, response, body) {
