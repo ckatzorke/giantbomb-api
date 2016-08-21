@@ -4,7 +4,7 @@
   "description": "A node.js / io.js based wrapper for the giantbomb (REST) API",
   "main": "src/app/giantbomb.js",
   "scripts": {
-    "start": "node src/app/server.js",
+    "server": "node src/app/server.js",
     "test": "gulp test"
   },
   "repository": {

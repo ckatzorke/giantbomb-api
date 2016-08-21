@@ -1,4 +1,6 @@
+
 # giantbomb-api
+
 Project makes use of EcmaScript 6 features, so io.js is required to run the api (node --harmony will work when node supports template strings).
 
 ## How to set the api key
@@ -25,20 +27,20 @@ Watch the output, the server is created, bound to _localhost:3000_ with the endp
 
 ## tests
 
-Using mmocha and nock for tests, see src/test for test cases
+Using mocha and nock for tests, see src/test for test cases
 
-# How to use
+## How to use
 
-## general usage
+### general usage
 
     var apikey = require('./apikey'); // <- your apikey, see above
     var gb = require('giantbomb-api')(apikey); // <- initialize gb api wrapper
 
-## usage of gb.games
+### usage of gb.games
 
     gb.games(options); //games resource abstraction
 
-### options
+#### options
 
 Example: filter by name 'resident evil', return all entries (paging=false, limit=100)
 
@@ -67,14 +69,33 @@ result
 
      {totalResults: 1, results: Array[1]}
 
-## usage of gb.details
+### usage of gb.details
 
 Example: Load all details for id=4072 (DOTT)
 
     gb.detail(4072);
 
-## usage of gb.quicksearch
+### usage of gb.quicksearch
 
 Example: Search for Bloodborne
 
     gb.quicksearch('bloodborne');
+
+
+## Using docker
+
+Do not forget to set you API key?
+
+Create the container with
+
+    docker build -t <name> .
+
+Run with
+
+    docker run -p 3000:3000 -d <name>
+
+Test with
+
+    curl http://localhost:3000/gb/search?q=bloodborne
+
+Hint: If you are using docker toolbox, replace localhost with your docker ip.
