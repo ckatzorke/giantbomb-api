@@ -99,3 +99,17 @@ Test with
     curl http://localhost:3000/gb/search?q=bloodborne
 
 Hint: If you are using docker toolbox, replace localhost with your docker ip.
+
+
+
+Get container ID
+
+    docker ps
+
+To see logs
+
+    docker logs <containerid>
+
+To enter the container
+
+    docker exec -it <containerid> /bin/bash
