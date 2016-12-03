@@ -2,9 +2,12 @@
     "name": "giantbomb-api",
     "version": "0.0.1",
     "description": "A node.js / io.js based wrapper for the giantbomb (REST) API",
-    "main": "src/app/giantbomb.js",
+    "main": "dist/giantbomb.js",
     "scripts": {
-        "server": "node src/app/server.js",
+        "sample1": "node dist/sample1.js",
+        "sample2": "node dist/sample2.js",
+        "sample3": "node dist/sample3.js",
+        "build": "tsc", 
         "test": "gulp test"
     },
     "repository": {
@@ -12,7 +15,7 @@
         "url": "https://github.com/ckatzorke/giantbomb-api.git"
     },
     "author": "Christian Katzorke <ckatzorke@gmail.com>",
-    "license": "MIT",
+    "license": "WTFPL",
     "bugs": {
         "url": "https://github.com/ckatzorke/giantbomb-api/issues"
     },
