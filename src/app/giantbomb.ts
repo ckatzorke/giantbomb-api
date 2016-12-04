@@ -24,7 +24,13 @@ class Giantbomb {
         searchOptions.qs.resources = 'game';
         searchOptions.qs.field_list = 'id,name,deck,image,platforms';
         return await this.execute(searchOptions);
-        
+  }
+
+  public async details(id: string): Promise<any>{
+        let detailsOptions = this.httpDefaultOptions.clone();
+        detailsOptions.url += `/game/3030-${id}`;
+        detailsOptions.qs.field_list = '';
+        return await this.execute(detailsOptions);
   }
 
   private async execute(options: HttpOptions): Promise<any>{

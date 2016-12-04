@@ -31,6 +31,14 @@ class Giantbomb {
             return yield this.execute(searchOptions);
         });
     }
+    deatils(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let detailsOptions = this.httpDefaultOptions.clone();
+            detailsOptions.url += `/game/3030-${id}`;
+            detailsOptions.qs.field_list = '';
+            return yield this.execute(detailsOptions);
+        });
+    }
     execute(options) {
         return __awaiter(this, void 0, void 0, function* () {
             //request.debug(true);
