@@ -10,7 +10,20 @@ class HttpOptions {
   }
 
   public clone(){
-    return new HttpOptions(this.url, this.qs, this.method);
+    let qsCopy = this.copyObject(this.qs);
+    return new HttpOptions(this.url, qsCopy, this.method);
+  }
+
+  private copyObject<T> (object:T): T {
+    var objectCopy = <T>{};
+
+    for (var key in object){
+        if (object.hasOwnProperty(key)){
+            objectCopy[key] = object[key];
+        }
+    }
+
+    return objectCopy;
   }
 }
 

@@ -30,7 +30,14 @@ class Giantbomb {
         let detailsOptions = this.httpDefaultOptions.clone();
         detailsOptions.url += `/game/3030-${id}`;
         detailsOptions.qs.field_list = '';
-        return await this.execute(detailsOptions);
+        let result = await this.execute(detailsOptions);
+        //if found, extract results directly
+        if(result.number_of_total_results === 0){
+          result = null;
+        } else {
+          result = result.results;
+        }
+        return result;
   }
 
   private async execute(options: HttpOptions): Promise<any>{
