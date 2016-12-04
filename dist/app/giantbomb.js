@@ -31,7 +31,7 @@ class Giantbomb {
             return yield this.execute(searchOptions);
         });
     }
-    deatils(id) {
+    details(id) {
         return __awaiter(this, void 0, void 0, function* () {
             let detailsOptions = this.httpDefaultOptions.clone();
             detailsOptions.url += `/game/3030-${id}`;
