@@ -7,23 +7,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
-//quicksearch for a single game, getting details for it
+//quicksearch for multi hits, iterating over results
 const giantbomb_1 = require('../app/giantbomb');
 let gb = new giantbomb_1.default(process.env.GIANTBOMB_APIKEY);
-function searchDOTT() {
+search();
+function search() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            let searchResults = yield gb.quickSearch('"Day of the Tentacle"');
-            let dottId = searchResults.results[0].id;
-            console.log('Found ' + searchResults.results.length + ' results (should be 1, loading details for 1st entry). Loading details for id=' + dottId);
-            let dott = yield gb.details(dottId);
-            console.info('Details for ' + dott.name);
+            console.log('Searching for "Dark Souls"...');
+            let searchResults = yield gb.quickSearch('"Dark Souls"');
+            console.log(`Found ${searchResults.results.length} results`);
             console.info('=============================');
-            console.info(dott.deck);
+            for (let game of searchResults.results) {
+                console.log(`${game.id}\t${game.name}`);
+            }
         }
         catch (error) {
             console.error('Error during execution chain: ', error, error.stack);
         }
     });
 }
-searchDOTT();
