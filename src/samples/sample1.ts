@@ -1,4 +1,4 @@
-//quicksearch for a single game
+//quicksearch for a single game, getting details for it
 import Giantbomb from '../app/giantbomb';
 
 let gb = new Giantbomb(process.env.GIANTBOMB_APIKEY);
