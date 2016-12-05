@@ -21,14 +21,14 @@ class Giantbomb {
             .addQueryStringParameter('format', 'json').build();
         this.httpDefaultOptions = new httpoptions_1.default('http://www.giantbomb.com/api', qs);
     }
-    quickSearch(searchString) {
+    quickSearch(searchString, filter = null) {
         return __awaiter(this, void 0, void 0, function* () {
             let searchOptions = this.httpDefaultOptions.clone();
             searchOptions.url += '/search';
             searchOptions.qs.query = searchString;
             searchOptions.qs.resources = 'game';
             searchOptions.qs.field_list = 'id,name,deck,image,platforms';
-            return yield this.execute(searchOptions);
+            return yield this.execute(searchOptions, filter);
         });
     }
     details(id) {
@@ -47,9 +47,10 @@ class Giantbomb {
             return result;
         });
     }
-    execute(options) {
+    execute(options, filter = null) {
         return __awaiter(this, void 0, void 0, function* () {
-            //request.debug(true);
+            request.debug(true);
+            this.handleFilter(options, filter);
             console.log('Options:', options);
             try {
                 let result = yield request.json(options.url, options);
@@ -62,6 +63,24 @@ class Giantbomb {
                 throw e;
             }
         });
+    }
+    handleFilter(options, filter = null) {
+        if (filter !== null) {
+            let filterString = '';
+            let firstFilter = true;
+            for (let property in filter) {
+                if (filter.hasOwnProperty(property)) {
+                    if (firstFilter) {
+                        firstFilter = false;
+                    }
+                    else {
+                        filterString += '|';
+                    }
+                    filterString += property + ':' + filter[property];
+                }
+            }
+            options.qs.filter = filterString;
+        }
     }
 }
 Object.defineProperty(exports, "__esModule", { value: true });

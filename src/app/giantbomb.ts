@@ -17,13 +17,13 @@ class Giantbomb {
   }
 
 
-  public async quickSearch(searchString: string): Promise<any>{
+  public async quickSearch(searchString: string, filter:any = null): Promise<any>{
         let searchOptions = this.httpDefaultOptions.clone();
         searchOptions.url += '/search';
         searchOptions.qs.query = searchString;
         searchOptions.qs.resources = 'game';
         searchOptions.qs.field_list = 'id,name,deck,image,platforms';
-        return await this.execute(searchOptions);
+        return await this.execute(searchOptions, filter);
   }
 
   public async details(id: string): Promise<any>{
@@ -40,8 +40,9 @@ class Giantbomb {
         return result;
   }
 
-  private async execute(options: HttpOptions): Promise<any>{
-    //request.debug(true);
+  private async execute(options: HttpOptions, filter:any = null): Promise<any>{
+    request.debug(true);
+    this.handleFilter(options, filter);
     console.log('Options:', options);
     try{
       let result = await request.json<any>(options.url, options);
@@ -51,6 +52,24 @@ class Giantbomb {
       return result;
     }catch(e){
       throw e;
+    }
+  }
+
+  private handleFilter(options: HttpOptions, filter:any = null): void {
+    if(filter !== null){
+      let filterString = '';
+      let firstFilter = true;
+      for (let property in filter) {
+          if (filter.hasOwnProperty(property)) {
+              if (firstFilter) {
+                  firstFilter = false;
+              } else {
+                  filterString += '|';
+              }
+              filterString += property + ':' + filter[property];
+          }
+      }
+      options.qs.filter = filterString;
     }
   }
 
