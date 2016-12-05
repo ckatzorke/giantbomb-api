@@ -8,23 +8,23 @@ var gb = require('../giantbomb.js')(apikey);
 
 console.log('Getting all games for virtual boy...');
 gb.games({
+  filter: {
+    platforms: 79
+  }
+}).then(function (result) {
+  console.log('found ' + result.results.length + ' games for VirtualBoy');
+  console.log('Getting all games for Playstation...');
+  return gb.games({
     filter: {
-        platforms: 79
-    }
+      platforms: 35
+    },
+    limit: 1,
+    offset: 0,
+    paging: true
+  });
 }).then(function (result) {
-    console.log('found ' + result.results.length + ' games for VirtualBoy');
-    console.log('Getting all games for Playstation...');
-    return gb.games({
-        filter: {
-            platforms: 35
-        },
-        limit: 1,
-        offset: 0,
-        paging: true
-    });
-}).then(function (result) {
-    console.log('found ' + result.totalResults + ' games for ps3');
+  console.log('found ' + result.totalResults + ' games for ps3');
 }).
-catch(function (error) {
+  catch(function (error) {
     console.error('Error during execution chain: ', error, error.stack);
-});
+  });

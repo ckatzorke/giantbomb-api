@@ -1,26 +1,26 @@
 class HttpOptions {
 
-  public headers: any =  {
-			  'User-Agent': 'giantbomb-node-typescript; node search client by Christian Katzorke'
-	};
+  public headers: any = {
+    'User-Agent': 'giantbomb-node-typescript; node search client by Christian Katzorke'
+  };
 
-  public throwResponseError:boolean = true;
+  public throwResponseError: boolean = true;
 
-  constructor(public url: string, public qs: any, public method = "GET"){
+  constructor(public url: string, public qs: any, public method = "GET") {
   }
 
-  public clone(){
+  public clone() {
     let qsCopy = this.copyObject(this.qs);
     return new HttpOptions(this.url, qsCopy, this.method);
   }
 
-  private copyObject<T> (object:T): T {
+  private copyObject<T>(object: T): T {
     var objectCopy = <T>{};
 
-    for (var key in object){
-        if (object.hasOwnProperty(key)){
-            objectCopy[key] = object[key];
-        }
+    for (var key in object) {
+      if (object.hasOwnProperty(key)) {
+        objectCopy[key] = object[key];
+      }
     }
 
     return objectCopy;
