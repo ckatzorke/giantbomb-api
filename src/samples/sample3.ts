@@ -5,16 +5,18 @@ let gb = new Giantbomb(process.env.GIANTBOMB_APIKEY);
 
 search();
 
-async function search(){
-  try{
+async function search() {
+  try {
     console.log('Searching for "Dark Souls"...');
-    let searchResults = await gb.quickSearch('Dark Souls', {'platforms': 146})
+    let filter = new Map<string, string>();
+    filter.set('platforms', '146');
+    let searchResults = await gb.quickSearch('Dark Souls', filter);
     console.log(`Found ${searchResults.results.length} results`);
     console.info('=============================');
-    for(let game of searchResults.results){
+    for (let game of searchResults.results) {
       console.log(`${game.id}\t${game.name}`);
     }
-  } catch(error) {
+  } catch (error) {
     console.error('Error during execution chain: ', error, error.stack);
   }
 }

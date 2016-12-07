@@ -15,7 +15,9 @@ function search() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             console.log('Searching for "Dark Souls"...');
-            let searchResults = yield gb.quickSearch('Dark Souls', { 'platforms': 146 });
+            let filter = new Map();
+            filter.set('platforms', '146');
+            let searchResults = yield gb.quickSearch('Dark Souls', filter);
             console.log(`Found ${searchResults.results.length} results`);
             console.info('=============================');
             for (let game of searchResults.results) {

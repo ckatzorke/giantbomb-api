@@ -28,7 +28,9 @@ class Giantbomb {
             searchOptions.qs.query = searchString;
             searchOptions.qs.resources = 'game';
             searchOptions.qs.field_list = 'id,name,deck,image,platforms';
-            return yield this.execute(searchOptions, filter);
+            let result = yield this.execute(searchOptions, filter);
+            //filtering not possible with /search endpoint filter has to be applied afterwards
+            return result;
         });
     }
     details(id) {
@@ -69,15 +71,13 @@ class Giantbomb {
             let filterString = '';
             let firstFilter = true;
             for (let property in filter) {
-                if (filter.hasOwnProperty(property)) {
-                    if (firstFilter) {
-                        firstFilter = false;
-                    }
-                    else {
-                        filterString += '|';
-                    }
-                    filterString += property + ':' + filter[property];
+                if (firstFilter) {
+                    firstFilter = false;
                 }
+                else {
+                    filterString += '|';
+                }
+                filterString += property + ':' + filter[property];
             }
             options.qs.filter = filterString;
         }

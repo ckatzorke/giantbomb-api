@@ -17,13 +17,15 @@ class Giantbomb {
   }
 
 
-  public async quickSearch(searchString: string, filter:any = null): Promise<any> {
+  public async quickSearch(searchString: string, filter: Map<string, string> = null): Promise<any> {
     let searchOptions = this.httpDefaultOptions.clone();
     searchOptions.url += '/search';
     searchOptions.qs.query = searchString;
     searchOptions.qs.resources = 'game';
     searchOptions.qs.field_list = 'id,name,deck,image,platforms';
-    return await this.execute(searchOptions, filter);
+    let result = await this.execute(searchOptions, filter);
+    //filtering not possible with /search endpoint filter has to be applied afterwards
+    return result;
   }
 
   public async details(id: string): Promise<any> {
@@ -40,7 +42,7 @@ class Giantbomb {
     return result;
   }
 
-  private async execute(options: HttpOptions, filter:any = null): Promise<any>{
+  private async execute(options: HttpOptions, filter: Map<string, string> = null): Promise<any> {
     request.debug(true);
     this.handleFilter(options, filter);
     console.log('Options:', options);
@@ -55,19 +57,17 @@ class Giantbomb {
     }
   }
 
-  private handleFilter(options: HttpOptions, filter:any = null): void {
-    if(filter !== null){
+  private handleFilter(options: HttpOptions, filter: Map<string, string> = null): void {
+    if (filter !== null) {
       let filterString = '';
       let firstFilter = true;
       for (let property in filter) {
-          if (filter.hasOwnProperty(property)) {
-              if (firstFilter) {
-                  firstFilter = false;
-              } else {
-                  filterString += '|';
-              }
-              filterString += property + ':' + filter[property];
-          }
+        if (firstFilter) {
+          firstFilter = false;
+        } else {
+          filterString += '|';
+        }
+        filterString += property + ':' + filter[property];
       }
       options.qs.filter = filterString;
     }
