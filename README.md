@@ -5,9 +5,19 @@ Project makes use of EcmaScript 6 features, so io.js is required to run the api 
 
 ## How to set the api key
 
-Giantbomb needs an API key. Since I do not want to check in this information, the sample[123].js file requires an apikey.js file in the _src/app_ directory. This file is included in .gitignore, so create one on your own, containing following content
+Giantbomb needs an API key. Since I do not want to check in this information, the sample[123].js file requires an apikey.js file in the _src/app_ directory. 
+This api expects the api key to be set as environment variable GIANTBOMB_APIKEY.
+For *ix environments use
 
-    module.exports = '<your_api_key_here';
+    export GIANTBOMB_APIKEY = <your_api_key_here>
+
+For windows/powershell
+
+    $env:GIANTBOMB_APIKEY="<your_api_key>";
+
+For windows
+
+    set GIANTBOMB_APIKEY="<your_api_key>"
 
 ## run cli samples
 
