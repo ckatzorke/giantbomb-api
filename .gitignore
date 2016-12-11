@@ -33,3 +33,6 @@ bower_components
 
 #exclude the apikey file
 apikey.js
+
+#node log
+npm-debug.log*
