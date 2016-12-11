@@ -2,14 +2,14 @@
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
         function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
-const httpoptions_1 = require("./httpoptions");
-const querystring_1 = require("./querystring");
-const request = require("web-request");
+const httpoptions_1 = require('./httpoptions');
+const querystring_1 = require('./querystring');
+const request = require('web-request');
 class Giantbomb {
     constructor(apikey) {
         this.apikey = apikey;
@@ -87,5 +87,4 @@ class Giantbomb {
     }
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-//util, get the response check for transport errors, and logical errors (from giantbomb in JSON), if an error occured the promise will be rejected, in case of success the JSON object is returned
 exports.default = Giantbomb;
