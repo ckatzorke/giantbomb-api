@@ -10,20 +10,8 @@ class HttpOptions {
   }
 
   public clone() {
-    let qsCopy = this.copyObject(this.qs);
+    let qsCopy = Object.assign({}, this.qs);//{ ...this.qs }; //<- not working yet? ts 2.1, es2017
     return new HttpOptions(this.url, qsCopy, this.method);
-  }
-
-  private copyObject<T>(object: T): T {
-    var objectCopy = <T>{};
-
-    for (var key in object) {
-      if (object.hasOwnProperty(key)) {
-        objectCopy[key] = object[key];
-      }
-    }
-
-    return objectCopy;
   }
 }
 
