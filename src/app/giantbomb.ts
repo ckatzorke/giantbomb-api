@@ -7,6 +7,9 @@ class Giantbomb {
   private httpDefaultOptions: HttpOptions;
 
   constructor(private apikey: string) {
+    if(!apikey){
+      throw new Error('API key is needed for Giantbomb, please set as environment variable.');
+    }
     let qs = new QueryStringBuilder().addQueryStringParameter('api_key', this.apikey)
       .addQueryStringParameter('limit', 100)
       .addQueryStringParameter('offset', 0)
