@@ -1,7 +1,7 @@
 import * as mocha from 'mocha';
 import * as chai from 'chai';
 
-import Giantbomb from '../app/giantbomb';
+import { Giantbomb, Platform } from '../app/giantbomb';
 
 const expect = chai.expect;
 describe('Giantbomb tests', () => {
@@ -28,9 +28,5 @@ describe('Giantbomb tests', () => {
     });
   });
 
-
-  describe('Test for search', () => {
-
-  });
 
 });

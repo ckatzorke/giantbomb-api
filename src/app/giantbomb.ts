@@ -2,12 +2,20 @@ import HttpOptions from './httpoptions';
 import { QueryStringBuilder } from './querystring';
 import * as request from 'web-request';
 
-class Giantbomb {
+/**
+ * Wrapper class for <a href="http://www.giantbomb.com">Giantbomb</a> REST API. 
+ */
+export class Giantbomb {
 
   private httpDefaultOptions: HttpOptions;
 
+  /**
+   * @constructor 
+   * @param {string} apikey - the Giantbomb API key
+   * @throws an Error when no apikey (null, "" or undefined) is passed
+   */
   constructor(private apikey: string) {
-    if(!apikey){
+    if (!apikey) {
       throw new Error('API key is needed for Giantbomb, please set as environment variable.');
     }
     let qs = new QueryStringBuilder().addQueryStringParameter('api_key', this.apikey)
@@ -19,18 +27,26 @@ class Giantbomb {
     this.httpDefaultOptions = new HttpOptions('http://www.giantbomb.com/api', qs);
   }
 
-
-  public async quickSearch(searchString: string, filter: Map<string, string> = null): Promise<any> {
+  /**
+   * @param {string} searchString
+   * @return a Promise with the json result
+   * @TODO use typed response, not any
+   */
+  public async quickSearch(searchString: string): Promise<any> {
     let searchOptions = this.httpDefaultOptions.clone();
     searchOptions.url += '/search';
     searchOptions.qs.query = searchString;
     searchOptions.qs.resources = 'game';
     searchOptions.qs.field_list = 'id,name,deck,image,platforms';
-    let result = await this.execute(searchOptions, filter);
+    let result = await this.execute(searchOptions);
     //filtering not possible with /search endpoint filter has to be applied afterwards
     return result;
   }
 
+  /**
+   * @return a Promise with the json result
+   * @TODO use typed response, not any
+   */
   public async details(id: string): Promise<any> {
     let detailsOptions = this.httpDefaultOptions.clone();
     detailsOptions.url += `/game/3030-${id}`;
@@ -45,9 +61,37 @@ class Giantbomb {
     return result;
   }
 
-  private async execute(options: HttpOptions, filter: Map<string, string> = null): Promise<any> {
-    request.debug(true);
-    this.handleFilter(options, filter);
+  /**
+   * abstraction/simplification for /games resource, but returns all games
+   */
+  public async gamesForPlatform(platform: Platform): Promise<Array<GameIndex>> {
+    let gamesOptions = this.httpDefaultOptions.clone();
+    gamesOptions.url += `/games`;
+    gamesOptions.qs.platforms = `${platform.id}`;
+    gamesOptions.qs.field_list = 'id,name,deck,image';
+
+    let result = new Array<GameIndex>();
+    let offset = 0;
+    let finished: boolean = false;
+    while (!finished) {
+      let response = await this.execute(gamesOptions);
+      let pageSize = response.number_of_page_results;
+      let totalSize = response.number_of_total_results;
+      result.push(...response.results);
+      offset += pageSize;
+      if (offset >= totalSize) {
+        finished = true;
+      }
+      gamesOptions.qs.offset = offset;
+    }
+    return result;
+
+  }
+
+
+  private async execute(options: HttpOptions): Promise<any> {
+    //request.debug(true);
+    //this.handleFilter(options, filter);
     console.log('Options:', options);
     try {
       let result = await request.json<any>(options.url, options);
@@ -74,6 +118,30 @@ class Giantbomb {
       }
       options.qs.filter = filterString;
     }
+  }
+
+}
+
+
+export class Platform {
+
+  public static readonly  PS4: Platform = new Platform(146, "Playstation 4", "PS4");
+  public static readonly  VIRTUALBOY: Platform = new Platform(79, "Virtual Boy", "VBoy");
+
+  public readonly id: number;
+  public readonly name: string;
+  public readonly short: string;
+
+  private constructor(id: number, name: string, short: string) {
+    this.id = id;
+    this.name = name;
+    this.short = short;
+  }
+}
+
+export class GameIndex {
+
+  constructor(public id: number, public name: string, public deck: string, public images: any){
   }
 
 }

@@ -1,20 +1,17 @@
-//quicksearch for multi hits (more fuzzy) with additional platform filter, iterating over results
-import Giantbomb from '../app/giantbomb';
+//Getting all games for a platform, using an Iterator
+import { Giantbomb, Platform } from '../app/giantbomb';
 
 let gb = new Giantbomb(process.env.GIANTBOMB_APIKEY);
 
-search();
+iterateAllVirtualBoyGames();
 
-async function search() {
+async function iterateAllVirtualBoyGames() {
   try {
-    console.log('Searching for "Dark Souls"...');
-    let filter = new Map<string, string>();
-    filter.set('platforms', '146'); //<- does not work yet
-    let searchResults = await gb.quickSearch('Dark Souls', filter);
-    console.log(`Found ${searchResults.results.length} results`);
-    console.info('=============================');
-    for (let game of searchResults.results) {
-      console.log(`${game.id}\t${game.name}`);
+    console.log('Identifying all games for VBoy');
+    const vbGames = await gb.gamesForPlatform(Platform.VIRTUALBOY);
+    console.log('Number of Games:', vbGames.length);
+    for(let game of vbGames){
+      console.log(game.name);
     }
   } catch (error) {
     console.error('Error during execution chain: ', error, error.stack);

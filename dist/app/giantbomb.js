@@ -10,7 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const httpoptions_1 = require("./httpoptions");
 const querystring_1 = require("./querystring");
 const request = require("web-request");
+/**
+ * Wrapper class for <a href="http://www.giantbomb.com">Giantbomb</a> REST API.
+ */
 class Giantbomb {
+    /**
+     * @constructor
+     * @param {string} apikey - the Giantbomb API key
+     * @throws an Error when no apikey (null, "" or undefined) is passed
+     */
     constructor(apikey) {
         this.apikey = apikey;
         if (!apikey) {
@@ -24,18 +32,27 @@ class Giantbomb {
             .addQueryStringParameter('format', 'json').build();
         this.httpDefaultOptions = new httpoptions_1.default('http://www.giantbomb.com/api', qs);
     }
-    quickSearch(searchString, filter = null) {
+    /**
+     * @param {string} searchString
+     * @return a Promise with the json result
+     * @TODO use typed response, not any
+     */
+    quickSearch(searchString) {
         return __awaiter(this, void 0, void 0, function* () {
             let searchOptions = this.httpDefaultOptions.clone();
             searchOptions.url += '/search';
             searchOptions.qs.query = searchString;
             searchOptions.qs.resources = 'game';
             searchOptions.qs.field_list = 'id,name,deck,image,platforms';
-            let result = yield this.execute(searchOptions, filter);
+            let result = yield this.execute(searchOptions);
             //filtering not possible with /search endpoint filter has to be applied afterwards
             return result;
         });
     }
+    /**
+     * @return a Promise with the json result
+     * @TODO use typed response, not any
+     */
     details(id) {
         return __awaiter(this, void 0, void 0, function* () {
             let detailsOptions = this.httpDefaultOptions.clone();
@@ -52,10 +69,36 @@ class Giantbomb {
             return result;
         });
     }
-    execute(options, filter = null) {
+    /**
+     * abstraction/simplification for /games resource, but returns all games
+     */
+    gamesForPlatform(platform) {
         return __awaiter(this, void 0, void 0, function* () {
-            request.debug(true);
-            this.handleFilter(options, filter);
+            let gamesOptions = this.httpDefaultOptions.clone();
+            gamesOptions.url += `/games`;
+            gamesOptions.qs.platforms = `${platform.id}`;
+            gamesOptions.qs.field_list = 'id,name,deck,image';
+            let result = new Array();
+            let offset = 0;
+            let finished = false;
+            while (!finished) {
+                let response = yield this.execute(gamesOptions);
+                let pageSize = response.number_of_page_results;
+                let totalSize = response.number_of_total_results;
+                result.push(...response.results);
+                offset += pageSize;
+                if (offset >= totalSize) {
+                    finished = true;
+                }
+                gamesOptions.qs.offset = offset;
+            }
+            return result;
+        });
+    }
+    execute(options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            //request.debug(true);
+            //this.handleFilter(options, filter);
             console.log('Options:', options);
             try {
                 let result = yield request.json(options.url, options);
@@ -86,6 +129,26 @@ class Giantbomb {
         }
     }
 }
+exports.Giantbomb = Giantbomb;
+class Platform {
+    constructor(id, name, short) {
+        this.id = id;
+        this.name = name;
+        this.short = short;
+    }
+}
+Platform.PS4 = new Platform(146, "Playstation 4", "PS4");
+Platform.VIRTUALBOY = new Platform(79, "Virtual Boy", "VBoy");
+exports.Platform = Platform;
+class GameIndex {
+    constructor(id, name, deck, images) {
+        this.id = id;
+        this.name = name;
+        this.deck = deck;
+        this.images = images;
+    }
+}
+exports.GameIndex = GameIndex;
 Object.defineProperty(exports, "__esModule", { value: true });
 //util, get the response check for transport errors, and logical errors (from giantbomb in JSON), if an error occured the promise will be rejected, in case of success the JSON object is returned
 exports.default = Giantbomb;

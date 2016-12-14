@@ -7,21 +7,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
-//quicksearch for multi hits (more fuzzy) with additional platform filter, iterating over results
+//Getting all games for a platform, using an Iterator
 const giantbomb_1 = require("../app/giantbomb");
-let gb = new giantbomb_1.default(process.env.GIANTBOMB_APIKEY);
-search();
-function search() {
+let gb = new giantbomb_1.Giantbomb(process.env.GIANTBOMB_APIKEY);
+iterateAllVirtualBoyGames();
+function iterateAllVirtualBoyGames() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log('Searching for "Dark Souls"...');
-            let filter = new Map();
-            filter.set('platforms', '146');
-            let searchResults = yield gb.quickSearch('Dark Souls', filter);
-            console.log(`Found ${searchResults.results.length} results`);
-            console.info('=============================');
-            for (let game of searchResults.results) {
-                console.log(`${game.id}\t${game.name}`);
+            console.log('Identifying all games for VBoy');
+            const vbGames = yield gb.gamesForPlatform(giantbomb_1.Platform.VIRTUALBOY);
+            console.log('Number of Games:', vbGames.length);
+            for (let game of vbGames) {
+                console.log(game.name);
             }
         }
         catch (error) {
