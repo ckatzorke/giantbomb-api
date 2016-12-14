@@ -9,7 +9,7 @@ async function search() {
   try {
     console.log('Searching for "Dark Souls"...');
     let filter = new Map<string, string>();
-    filter.set('platforms', '146');
+    filter.set('platforms', '146'); //<- does not work yet
     let searchResults = await gb.quickSearch('Dark Souls', filter);
     console.log(`Found ${searchResults.results.length} results`);
     console.info('=============================');
