@@ -125,7 +125,15 @@ export class Giantbomb {
 
 export class Platform {
 
+  public static readonly  PSP: Platform = new Platform(18, "PlayStation Portable", "PSP");
+  public static readonly  PSVITA: Platform = new Platform(129, "PlayStation 3", "PSVITA");
+  public static readonly  PS: Platform = new Platform(22, "PlayStation", "PS");
+  public static readonly  PS2: Platform = new Platform(19, "PlayStation 2", "PS2");
+  public static readonly  PS3: Platform = new Platform(35, "PlayStation 3", "PS3");
   public static readonly  PS4: Platform = new Platform(146, "Playstation 4", "PS4");
+  public static readonly  PSNPSP: Platform = new Platform(116, "PlayStation Network (PSP)", "PSNPSP");
+  public static readonly  PSNPSV: Platform = new Platform(143, "PlayStation Network (PSVITA)", "PSNPSVITA");
+  public static readonly  PSNPS3: Platform = new Platform(88, "PlayStation Network (Playstation 3)", "PSNPS3");
   public static readonly  VIRTUALBOY: Platform = new Platform(79, "Virtual Boy", "VBoy");
 
   public readonly id: number;
