@@ -1,4 +1,4 @@
-//Getting all games for a platform, using an Iterator
+//Getting all games for a platform
 import { Giantbomb, Platform } from '../app/giantbomb';
 
 let gb = new Giantbomb(process.env.GIANTBOMB_APIKEY);
