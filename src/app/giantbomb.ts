@@ -134,6 +134,9 @@ export class Platform {
   public static readonly  PSNPSP: Platform = new Platform(116, "PlayStation Network (PSP)", "PSNPSP");
   public static readonly  PSNPSV: Platform = new Platform(143, "PlayStation Network (PSVITA)", "PSNPSVITA");
   public static readonly  PSNPS3: Platform = new Platform(88, "PlayStation Network (Playstation 3)", "PSNPS3");
+  public static readonly  XBOX: Platform = new Platform(32, "Microsoft XBOX", "XBOX");
+  public static readonly  XBOX360: Platform = new Platform(20, "Microsoft XBOX 360", "XBOX360");
+  public static readonly  XBOXONE: Platform = new Platform(145, "Microsoft XBOX One", "XONE");
   public static readonly  VIRTUALBOY: Platform = new Platform(79, "Virtual Boy", "VBoy");
 
   public readonly id: number;
